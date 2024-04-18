@@ -12,5 +12,10 @@
       <artifactId>mongodb-driver-sync</artifactId>
       <version>5.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>3.9.2</version>
+    </dependency>
   </dependencies>
 </project>
