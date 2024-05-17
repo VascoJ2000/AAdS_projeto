@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Client</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            background-color: #111;
+            color: #fff;
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding-top: 20px;
+        }
+        .chat-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .message {
+            position: relative;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+        .outgoing {
+            margin-left: auto;
+            background-color: #0b93f6;
+            color: white;
+            max-width: 70%;
+        }
+        .incoming {
+            background-color: #232323;
+            color: white;
+            max-width: 70%;
+        }
+        .chat-controls {
+            display: flex;
+            padding: 10px;
+        }
+        input, button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container chat-container">
+    <div class="chat-history">
+        <div th:each="msg : ${messages}" class="message" th:classappend="${msg.fromMe} ? 'outgoing' : 'incoming'">
+            <div th:text="${msg.content}">ChatHub 1 para 1</div>
+        </div>
+    </div>
+    <div class="chat-controls">
+        <input type="text" class="form-control" placeholder="Recipient IP" id="recipient" name="recipient">
+        <input type="text" class="form-control" placeholder="Type your message here..." id="message" name="message">
+        <button type="button" class="btn btn-primary" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+function sendMessage() {
+    const recipient = document.getElementById('recipient').value;
+    const message = document.getElementById('message').value;
+    fetch('/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'recipient=' + encodeURIComponent(recipient) + '&message=' + encodeURIComponent(message)
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Mensagem enviada:', data);
+        document.querySelector('.chat-history').innerHTML += `<div class="message outgoing">${message}</div>`;
+        document.getElementById('message').value = ''; 
+    })
+    .catch(error => console.error('Erro ao enviar mensagem:', error));
+}
+</script>
+</body>
+</html>

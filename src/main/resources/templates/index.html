@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Bootstrap 5.0.2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- CSS -->
+    <link href="../static/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Movie Night Planner</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#" onclick="showSection('home')">Home</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link loggedIn" href="#" onclick="showSection('chat')">New Chat</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link loggedIn" href="#" onclick="showSection('chat')">Add Chatter</a>
+                        </li>
+                    </ul>
+
+                    <form class="loggedOut">
+                        <button class="btn btn-primary me-2" id="btnNavLogin" type="button">Login</button>
+                        <button class="btn btn-secondary me-2" id="btnNavSignup" type="button">Signup</button>
+                    </form>
+
+                    <form class="loggedIn">
+                        <span class="navbar-text me-2" id="userLogged">
+                          user@email.com
+                        </span>
+                        <button class="btn btn-warning me-2" id="btnNavlogout" type="button" onclick="delLogout()">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home"></section>
+
+    <section id="chat"></section>
+
+    <!-- Modal para Signup novo utilizador -->
+    <!-- se retirar o data-bs-backdrop, o modal desaparece ao clicar no fundo da página -->
+    <div class="modal fade" id="modalSignup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        Registo de novo utilizador
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">E-Mail</label>
+                        <input type="email" class="form-control" id="usernameSignup" name="usernameSignup" placeholder="E-Mail"/>
+                        <p id="emailErroLoginSignup"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="senhaSignup" name="senhaSignup" placeholder="Senha"/>
+                        <p id="statusSignup"></p>
+                    </div>
+                    <div class="modal-footer d-block">
+                        <p id="pLogin" class="float-start">
+                            Já tem conta? <a href="#">Entre</a>
+                        </p>
+                        <button id="btnCancelaSignup" class="btn btn-warning float-end" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button class="btn btn-success float-end" id="btnSubmitSignup" onclick="postSignup()" data-bs-dismiss="modal">
+                            Signup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para fazer login -->
+    <!-- se retirar o data-bs-backdrop, o modal desaparece ao clicar no fundo da página -->
+    <div class="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        Insira suas credenciais
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btnLoginClose"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">E-Mail</label>
+                        <input type="email" class="form-control" id="usernameLogin" name="usernameLogin" placeholder="E-Mail"/>
+                        <p id="emailErroLogin"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="senhaLogin" name="senhaLogin" placeholder="Senha"/>
+                        <p id="passErroLogin"></p>
+                        <p id="statusLogin"></p>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe"/>
+                        <label class="form-check-label" for="rememberMe">Lembrar-me</label>
+                    </div>
+                    <div class="modal-footer d-block">
+                        <p id="pSignup" class="float-start">
+                            Sem conta ainda? <a href="#">Registe-se</a>
+                        </p>
+                        <button class="btn btn-warning float-end" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button class="btn btn-success float-end" id="btnSubmitLogin" onclick="postLogin()" data-bs-dismiss="modal">
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script src="../static/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+.loggedIn {
+    display: none;
+}
+
+.navbar {
+    background-color: transparent;
+    box-shadow: 0px 1px 20px #eaeaea;
+    transition: background-color 1s ease 0s;
+}
+
+.navbar.solid {
+    transition: background-color 1s ease 0s;
+}
+
+footer p {
+    font-size: 0.8em;
+}
+
+footer a, footer p {
+    color: gray;
+}
+
+section {
+    display: none;
+}
