@@ -1,3 +1,4 @@
+package com.example.chathub;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
@@ -25,6 +26,7 @@ public class ZooKeeperClient {
         this.zooKeeper = new ZooKeeper(ZOOKEEPER_HOST, 3000, null);
     }
 
+    // Registo do servidor
     public void registerServer(String path, byte[] data) throws KeeperException, InterruptedException {
         Stat stat = zooKeeper.exists(path, false);
         if (stat == null) {
@@ -34,6 +36,7 @@ public class ZooKeeperClient {
         }
     }
 
+    // Seleção do melhor sevidor
     public String selectBestServer() throws KeeperException, InterruptedException {
         List<String> servers = zooKeeper.getChildren("/servers", false);
         String bestServer = null;
@@ -49,5 +52,13 @@ public class ZooKeeperClient {
         }
 
         return bestServer;
+    }
+
+
+    public void updateServerLoad(String path, byte[] data) throws KeeperException, InterruptedException {
+        Stat stat = zooKeeper.exists(path, false);
+        if (stat != null) {
+            zooKeeper.setData(path, data, stat.getVersion());
+        }
     }
 }
