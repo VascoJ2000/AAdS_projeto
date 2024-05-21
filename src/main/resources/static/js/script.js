@@ -1,3 +1,5 @@
+const url = 'http://localhost:8080'
+
 const modalLogin = document.getElementById("modalLogin");
 const bsModalLogin = new bootstrap.Modal(modalLogin, (backdrop = "static")); // Pode passar opções
 const modalSignup = document.getElementById("modalSignup");
@@ -38,9 +40,13 @@ window.addEventListener('scroll', () => {
     if(window.scrollY > 5){
         document.getElementById('navbar').classList.add('solid');
         document.getElementById('navbar').classList.add('bg-dark');
+        document.getElementById('navbar').classList.remove('navbar-light');
+        document.getElementById('navbar').classList.add('navbar-dark');
     }else {
         document.getElementById('navbar').classList.remove('solid');
         document.getElementById('navbar').classList.remove('bg-dark');
+        document.getElementById('navbar').classList.remove('navbar-dark');
+        document.getElementById('navbar').classList.add('navbar-light');
     }
 });
 

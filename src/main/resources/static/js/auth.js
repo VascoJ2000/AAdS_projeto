@@ -1,5 +1,3 @@
-const url = 'https://localhost:4000'
-
 function login(email) {
     const notLogged = document.getElementsByClassName('loggedOut');
     const logged = document.getElementsByClassName('loggedIn');
@@ -20,66 +18,20 @@ function logoff() {
 }
 
 // Auth
-async function postLogin(){
+async function getLogin(){
     const email = document.getElementById('usernameLogin').value;
     const password = document.getElementById('senhaLogin').value;
-    await fetch(url + `/api/auth/${email}&${password}`, {
-        method: 'GET'
-    })
-        .then(response => response.json())
-        .then(data => {
-            sessionStorage.setItem('accessToken', data.accessToken);
-            sessionStorage.setItem('refreshToken', data.refreshToken);
-            login(data.email);
-            console.log(data)
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-async function delLogout(){
-    const refreshToken = sessionStorage.getItem('refreshToken');
-    if(!refreshToken) return alert('No User is logged in!');
-    fetch(url + '/api/auth', {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${refreshToken}`
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            sessionStorage.removeItem('refreshToken');
-            sessionStorage.removeItem('accessToken');
-            location.reload();
-            console.log(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            sessionStorage.removeItem('refreshToken');
-            sessionStorage.removeItem('accessToken');
-            location.reload();
-        });
-}
-
-async function getToken(){
-    const refreshToken = sessionStorage.getItem('refreshToken');
-    if(!refreshToken) return console.log('No token');
-    fetch(url + '/api/auth/token', {
+    const res = await fetch(url + `/api/auth/${email}&${password}`, {
         method: 'GET',
-        headers: { 'Authorization': `Bearer ${refreshToken}` }
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            sessionStorage.setItem('accessToken', data.accessToken);
-            login(data.email);
-        })
-        .catch(error => console.error('Error:', error));
+    }).then(res => {
+        if(res.ok) login(email)
+    }).catch(err => console.log(err))
 }
 
 async function postSignup(){
     const email = document.getElementById('usernameSignup').value;
     const password = document.getElementById('senhaSignup').value;
-    fetch('/api/auth/signup', {
+    await fetch('/api/auth', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -88,12 +40,27 @@ async function postSignup(){
             email: email,
             password: password
         }),
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-        })
-        .catch(error => console.error('Error:', error));
+    }).then(res => {
+        if(res.ok) console.log(res.status)
+    }).catch(err => console.log(err))
+
+
+}
+
+async function delLogout(){
+    const res = await fetch(url + '/api/auth', {
+        method: 'DELETE',
+    }).catch(err => console.log(err))
+
+    location.reload();
+}
+
+async function getToken(){
+    await fetch(url + '/api/auth/token', {
+        method: 'GET',
+    }).then(res => {
+        if(res.ok) login('')
+    }).catch(err => console.log(err.value + ' No Token'))
 }
 
 window.onload = getToken();
