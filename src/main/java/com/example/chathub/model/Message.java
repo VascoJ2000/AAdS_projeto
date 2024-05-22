@@ -1,15 +1,15 @@
 package com.example.chathub.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class Message {
     private String message;
-    private LocalDateTime date;
+    private Instant date;
     private String user_id;
 
     public Message(String message, String user_id) {
         this.message = message;
-        this.date = LocalDateTime.now();
+        this.date = Instant.now();
         this.user_id = user_id;
     }
 
@@ -17,12 +17,24 @@ public class Message {
         return message;
     }
 
-    public LocalDateTime getDate() {
+    public Instant getDate() {
         return date;
     }
 
     public String getUser_id() {
         return user_id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setDate(Instant date) {
+        this.date = date;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     @Override

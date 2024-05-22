@@ -25,6 +25,14 @@ public class Chat {
         return messages;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
+    }
+
     public void addMessage(Message message) {
         this.messages.add(message);
     }
