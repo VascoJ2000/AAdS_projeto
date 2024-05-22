@@ -1,40 +1,40 @@
 package com.example.chathub.controller;
 
 import com.example.chathub.model.User;
-import com.example.chathub.repository.UserRepository;
+import com.example.chathub.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthService authService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public User login(@RequestParam String email, @RequestParam String password) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            if (user.get().getPassword().equals(password)) {
-                return user.get();
+        User user = authService.findByEmail(email);
+        if (user != null) {
+            if (user.getPassword().equals(password)) {
+                return user;
             }
         }
         return null;
     }
 
     @PostMapping
-    public String signup(@RequestBody String email, @RequestParam String password) {
-        User newUser = new User(email, password);
-        userRepository.save(newUser);
-        return "User added successfully";
+    public User signup(@RequestBody String email, @RequestParam String password) {
+        User newUser = new User(email, passwordEncoder.encode(password));
+        return authService.save(newUser);
     }
 
     @DeleteMapping
     public String logout() {
-
         return "User logged out successfully";
     }
 
