@@ -10,54 +10,138 @@
     <!-- CSS -->
     <link href="/css/styles.css" rel="stylesheet">
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">ChatHub</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#" onclick="showSection('home')">Home</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link loggedIn" href="#" onclick="showSection('chat')">New Chat</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link loggedIn" href="#" onclick="showSection('chat')">Add Chatter</a>
-                        </li>
-                    </ul>
-
-                    <form class="loggedOut">
-                        <button class="btn btn-primary me-2" id="btnNavLogin" type="button">Login</button>
-                        <button class="btn btn-secondary me-2" id="btnNavSignup" type="button">Signup</button>
-                    </form>
-
-                    <form class="loggedIn">
-                        <span class="navbar-text me-2" id="userLogged">
-                          user@email.com
-                        </span>
-                        <button class="btn btn-warning me-2" id="btnNavlogout" type="button" onclick="delLogout()">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-    </header>
+<body>
 
     <section id="home">
-        <div class="container-xxl my-md-4"></div>
+        <div class="d-flex flex-column min-vh-100">
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">ChatHub</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="#" onclick="showSection('home')">Home</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link loggedIn" href="#" onclick="showSection('chat')">New Chat</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link loggedIn" href="#" onclick="showSection('chat')">Add Chatter</a>
+                                </li>
+                            </ul>
+
+                            <form class="loggedOut">
+                                <button class="btn btn-primary me-2" id="btnNavLogin" type="button">Login</button>
+                                <button class="btn btn-secondary me-2" id="btnNavSignup" type="button">Signup</button>
+                            </form>
+
+                            <form class="loggedIn">
+                            <span class="navbar-text me-2" id="userLogged">
+                              user@email.com
+                            </span>
+                                <button class="btn btn-warning me-2" id="btnNavlogout" type="button" onclick="delLogout()">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="container-xxl my-md-4">
+
+            </div>
+
+            <footer class="container-fluid text-center p-4 bg-dark mt-auto">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h6 class="text-secondary">ChatHub</h6>
+                        <hr>
+                        <p>
+                            <a href="#">Chathub</a><br>
+                            <a class="loggedIn" href="#" onclick="showSection('Chat')">New Chat</a><br>
+                            <a class="loggedIn" href="#" onclick="showSection('Chat')">Add Chatter</a>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <h6 class="text-secondary">Contacts</h6>
+                        <hr>
+                        <p>
+                            <i class="fas fa-envelope"></i> 30005819@students.ual.pt<br>
+                            <i class="fas fa-envelope"></i> 30009700@students.ual.pt<br>
+                            <i class="fas fa-envelope"></i> 30009680@students.ual.pt<br>
+                            <i class="fas fa-envelope"></i> 30008938@students.ual.pt
+                        </p>
+                    </div>
+
+                </div><br>
+
+                <h4 class="text-secondary"><i>@ 2024 Vasco J. Diogo B. Ricardo D. Ricardo B.</i></h4>
+            </footer>
+        </div>
     </section>
 
     <section id="chat">
-        <div class="">
-            <aside id="chat-list" class=""></aside>
-            <main id="container chat-current" class="">
+        <div class="container-fluid m-0 p-0">
+            <aside id="chat-list" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark min-vh-100" style="width: 280px;">
+                <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32"></svg>
+                    <span class="fs-4">Chat Rooms</span>
+                </a>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" aria-current="page">
+                            <svg class="bi me-2" width="16" height="16"></svg>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi me-2" width="16" height="16"></svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi me-2" width="16" height="16"></svg>
+                            Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi me-2" width="16" height="16"></svg>
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi me-2" width="16" height="16"></svg>
+                            Customers
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <strong id="user-side">mdo</strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </aside>
+            <main id="chat-current" class="">
                 <div class="chat-history"></div>
                 <div class="chat-controls">
                     <input type="text" class="form-control" placeholder="Type your message here..." id="message" name="message">
@@ -66,34 +150,6 @@
             </main>
         </div>
     </section>
-
-    <footer class="container-fluid text-center p-4 bg-dark mt-auto">
-        <div class="row">
-            <div class="col-sm-6">
-                <h6 class="text-secondary">ChatHub</h6>
-                <hr>
-                <p>
-                    <a href="#">Chathub</a><br>
-                    <a class="loggedIn" href="#" onclick="showSection('Chat')">New Chat</a><br>
-                    <a class="loggedIn" href="#" onclick="showSection('Chat')">Add Chatter</a>
-                </p>
-            </div>
-
-            <div class="col-sm-6">
-                <h6 class="text-secondary">Contacts</h6>
-                <hr>
-                <p>
-                    <i class="fas fa-envelope"></i> 30005819@students.ual.pt<br>
-                    <i class="fas fa-envelope"></i> 30009700@students.ual.pt<br>
-                    <i class="fas fa-envelope"></i> 30009680@students.ual.pt<br>
-                    <i class="fas fa-envelope"></i> 30008938@students.ual.pt
-                </p>
-            </div>
-
-        </div><br>
-
-        <h4 class="text-secondary"><i>@ 2024 Vasco J. Diogo B. Ricardo D. Ricardo B.</i></h4>
-    </footer>
 
     <!-- Modal para Signup novo utilizador -->
     <!-- se retirar o data-bs-backdrop, o modal desaparece ao clicar no fundo da página -->

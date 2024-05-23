@@ -2,6 +2,7 @@ function login(email) {
     const notLogged = document.getElementsByClassName('loggedOut');
     const logged = document.getElementsByClassName('loggedIn');
     const navEmail = document.getElementById('userLogged');
+    const sideNavEmail =document.getElementById('user-side')
 
     for(let i = 0; i<notLogged.length; i++){
         notLogged[i].style.display = "none";
@@ -11,6 +12,7 @@ function login(email) {
         logged[i].style.display = "block";
     }
     navEmail.innerHTML = email
+    sideNavEmail.innerHTML = email
 }
 
 function logoff() {
