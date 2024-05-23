@@ -3,6 +3,9 @@ package com.example.chathub.controller;
 import com.example.chathub.model.User;
 import com.example.chathub.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,30 +19,27 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping
-    public User login(@RequestParam String email, @RequestParam String password) {
-        User user = authService.findByEmail(email);
-        if (user != null) {
-            if (user.getPassword().equals(password)) {
-                return user;
-            }
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@RequestBody User user) {
+        User newUser = authService.findByEmail(user.getEmail());
+        System.out.println(user);
+        if (newUser.getPassword().equals(user.getPassword())) {
+            return new ResponseEntity<Void>(HttpStatusCode.valueOf(200));
         }
-        return null;
+        return new ResponseEntity<Void>(HttpStatusCode.valueOf(400));
     }
 
-    @PostMapping
-    public User signup(@RequestBody String email, @RequestParam String password) {
-        User newUser = new User(email, passwordEncoder.encode(password));
+    @PostMapping("/signup")
+    public User signup(@RequestBody User user) {
+        User newUser = new User(user.getEmail(), passwordEncoder.encode(user.getPassword()));
         return authService.save(newUser);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/logout")
     public String logout() {
         return "User logged out successfully";
-    }
-
-    @GetMapping("/token")
-    public String getToken() {
-        return "Login successful";
     }
 }

@@ -18,20 +18,28 @@ function logoff() {
 }
 
 // Auth
-async function getLogin(){
+async function postLogin(){
     const email = document.getElementById('usernameLogin').value;
     const password = document.getElementById('senhaLogin').value;
-    const res = await fetch(url + `/api/auth/${email}&${password}`, {
-        method: 'GET',
+    await fetch(url + `/api/auth/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email,
+            password: password
+        }),
     }).then(res => {
-        if(res.ok) login(email)
+        console.log(res)
+        if(res.ok) login(res.body.email)
     }).catch(err => console.log(err))
 }
 
 async function postSignup(){
     const email = document.getElementById('usernameSignup').value;
     const password = document.getElementById('senhaSignup').value;
-    await fetch('/api/auth', {
+    await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -48,19 +56,10 @@ async function postSignup(){
 }
 
 async function delLogout(){
-    const res = await fetch(url + '/api/auth', {
+    await fetch(url + '/api/auth/logout', {
         method: 'DELETE',
     }).catch(err => console.log(err))
 
     location.reload();
 }
 
-async function getToken(){
-    await fetch(url + '/api/auth/token', {
-        method: 'GET',
-    }).then(res => {
-        if(res.ok) login('')
-    }).catch(err => console.log(err.value + ' No Token'))
-}
-
-window.onload = getToken();
