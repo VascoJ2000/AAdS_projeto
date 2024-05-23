@@ -32,7 +32,7 @@ async function postLogin(){
         }),
     }).then(res => {
         console.log(res)
-        if(res.ok) login(res.body.email)
+        if(res.ok) login(email)
     }).catch(err => console.log(err))
 }
 
@@ -49,7 +49,8 @@ async function postSignup(){
             password: password
         }),
     }).then(res => {
-        if(res.ok) console.log(res.status)
+        console.log(res)
+        if(res.ok) location.reload();
     }).catch(err => console.log(err))
 
 
@@ -60,6 +61,6 @@ async function delLogout(){
         method: 'DELETE',
     }).catch(err => console.log(err))
 
-    location.reload();
+    logoff();
 }
 
