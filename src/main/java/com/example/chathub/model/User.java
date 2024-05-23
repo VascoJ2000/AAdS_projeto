@@ -1,8 +1,12 @@
 package com.example.chathub.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Data
+@NoArgsConstructor
 @Document(collection = "Users")
 public class User {
 
@@ -11,16 +15,6 @@ public class User {
 
     private String email;
     private String password;
-
-    public User(String email) {
-        this.email = email;
-        this.password = null;
-    }
-
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
 
     public String getId() {
         return id;
