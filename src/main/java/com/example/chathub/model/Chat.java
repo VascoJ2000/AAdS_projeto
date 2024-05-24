@@ -2,6 +2,7 @@ package com.example.chathub.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,6 +17,7 @@ public class Chat {
     @Id
     private String id;
 
+    private String name;
     private List<Message> messages;
     private List<String> users;
     private Instant creationDate;
@@ -56,8 +58,12 @@ public class Chat {
         this.messages = messages;
     }
 
-    public void setUsers(List<String> users) {
-        this.users = users;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setModifiedDate(Instant modifiedDate) {
