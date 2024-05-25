@@ -34,7 +34,10 @@ async function postLogin(){
         }),
     }).then(res => {
         console.log(res)
-        if(res.ok) login(email)
+        if(res.ok) {
+            login(email)
+            showSection('chat')
+        }
     }).catch(err => console.log(err))
 }
 

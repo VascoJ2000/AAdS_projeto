@@ -1,21 +1,57 @@
 const chatInput = document.getElementById('message')
 const chatHistory = document.getElementById('chat-history')
+const loading = document.getElementById('loading')
 const currentChat = null
 
-async function getChatList() {
-    await fetch(url + `/api/auth/chat`, {
+let stompClient = null
+
+function connect(e) {
+    const socket = new SockJS('/chat-socket');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, onConnect, onError);
+}
+
+function onConnect() {
+    stompClient.subscribe('/topic/public', mesReceived);
+    /*
+    const chats = getChatList()
+
+    for (let chat in chats) {
+        stompClient.subscribe(`/topic/${chat.id}`, mesReceived);
+    }
+    */
+    stompClient.send(
+        "/app/chat.addUser",
+        {},
+        JSON.stringify({})
+    )
+    loading.style.display = 'none'
+}
+
+function onError() {
+    loading.style.display = 'block'
+    loading.textContent = 'Could not load chat. Pls try again!'
+    loading.style.color = 'red'
+}
+
+function getChatList() {
+    let chats = null
+    fetch(url + `/api/chat`, {
         method: 'GET',
     })
         .then(res => res.json())
         .then(data => {
-            addChatToList(data)
             console.log(data)
+            chats = data
         })
         .catch(err => console.log(err))
+
+    return chats
 }
 
 async function getChat(chat) {
-    await fetch(url + `/api/auth/chat/${chat}`, {
+    await fetch(url + `/api/chat/${chat}`, {
         method: 'GET',
     })
         .then(res => res.json())
@@ -28,7 +64,7 @@ async function getChat(chat) {
 
 async function addChat() {
     const newChat = null
-    await fetch(url + `/api/auth/chat`, {
+    await fetch(url + `/api/chat`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -90,10 +126,30 @@ function addToChat(mes){
 
 }
 
-function loadChat(){
+function loadChat(chatRoom){
+    activateChat(chatRoom)
 
 }
 
+function activateChat(chatRoom) {
+    loading.textContent = "Loading chat..."
+    loading.style.display = "block"
+
+    const rooms = document.getElementsByTagName('chat-room')
+
+    for(let i = 0; i<rooms.length; i++){
+        rooms[i].classList.add('text-white')
+        rooms[i].classList.remove('active')
+    }
+
+    document.getElementById(chatRoom).classList.remove('text-white')
+    document.getElementById(chatRoom).classList.add('active')
+}
+
 function addChatToList(chat){
+
+}
+
+function mesReceived(){
 
 }

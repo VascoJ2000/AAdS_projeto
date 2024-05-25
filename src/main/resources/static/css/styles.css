@@ -30,12 +30,18 @@ section {
 }
 .outgoing {
     margin-left: auto;
-    background-color: #0b93f6;
+    background-color: green;
     color: white;
     max-width: 70%;
 }
 .incoming {
-    background-color: #232323;
+    background-color: #0b93f6;
     color: white;
+    max-width: 70%;
+}
+
+.server {
+    text-align: center;
+    color: darkgrey;
     max-width: 70%;
 }
