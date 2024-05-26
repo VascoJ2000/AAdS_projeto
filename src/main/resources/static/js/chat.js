@@ -1,11 +1,11 @@
 const chatInput = document.getElementById('message')
 const chatHistory = document.getElementById('chat-history')
 const loading = document.getElementById('loading')
-const currentChat = null
+let currentChat = null
 
 let stompClient = null
 
-function connect(e) {
+function connect() {
     const socket = new SockJS('/chat-socket');
     stompClient = Stomp.over(socket);
 
@@ -27,6 +27,7 @@ function onConnect() {
         JSON.stringify({})
     )
     loading.style.display = 'none'
+    currentChat = 'public'
 }
 
 function onError() {
@@ -81,26 +82,20 @@ async function addChat() {
         .catch(err => console.log(err))
 }
 
-async function sendMessage() {
+function sendMessage() {
     if (currentChat === null) return alert('No Chat is currently selected!')
-    const chat = currentChat.value
-    const mes = chatInput.value
-    await fetch(url + `/api/auth/chat/mes`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+    const chat = currentChat
+    const mes = chatInput.value.trim()
+
+    if(chat && mes){
+        const chatMes = {
             message: mes,
-            chatId: chat
-        }),
-    })
-        .then(res => res.json())
-        .then(data => {
-            loadChat(data)
-            console.log(data)
-        })
-        .catch(err => console.log(err))
+            chat: chat
+        }
+
+        stompClient.send("/api/chat/mes.send", {}, JSON.stringify(chatMes))
+        chatInput.value = ''
+    }
 }
 
 async function addUser() {
@@ -122,10 +117,6 @@ async function addUser() {
         .catch(err => console.log(err))
 }
 
-function addToChat(mes){
-
-}
-
 function loadChat(chatRoom){
     activateChat(chatRoom)
 
@@ -144,12 +135,39 @@ function activateChat(chatRoom) {
 
     document.getElementById(chatRoom).classList.remove('text-white')
     document.getElementById(chatRoom).classList.add('active')
+    currentChat = chatRoom
 }
 
 function addChatToList(chat){
+    const li = document.createElement('li')
+    li.classList.add('nav-item');
+    li.innerHTML = `<a href="#" id="${chat.id}" class="nav-link text-white chat-room" aria-current="page" onclick="loadChat('${chat.id}')">
+                        <svg class="bi me-2" width="16" height="16"></svg>
+                        chat.name
+                    </a>`
 
+    document.getElementById('chat-list').innerHTML += li
 }
 
-function mesReceived(){
+function mesReceived(payload){
+    const mes = JSON.parse(payload.body)
+    addToChat(mes)
+}
 
+function addToChat(mes){
+    const div = document.createElement('div');
+    div.classList.add('message')
+
+    const subDiv = document.createElement('div');
+    subDiv.innerHTML = mes.message;
+
+    if (mes.type == 'USER'){
+        div.classList.add('incoming')
+        div.innerHTML = `<div><b>${mes.user_id}</b></div>`
+    }else{
+        div.classList.add('server')
+    }
+
+    div.innerHTML += subDiv
+    chatHistory.innerHTML += div;
 }

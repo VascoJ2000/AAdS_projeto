@@ -55,7 +55,7 @@ public class ChatController {
         return chatService.findByUser(user);
     }
 
-    @MessageMapping
+    @MessageMapping("/mes.send")
     public void handleMessage(@Payload MessageSent messageSent) {
         Chat chatHistory = chatService.findById(messageSent.getChatId());
         List<String> users = chatHistory.getUsers();
@@ -68,7 +68,7 @@ public class ChatController {
         }
     }
 
-    @MessageMapping
+    @MessageMapping("/user.add")
     public void joinSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();

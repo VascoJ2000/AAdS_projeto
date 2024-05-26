@@ -37,6 +37,7 @@ async function postLogin(){
         if(res.ok) {
             login(email)
             showSection('chat')
+            connect()
         }
     }).catch(err => console.log(err))
 }
