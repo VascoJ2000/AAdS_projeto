@@ -4,8 +4,9 @@ import com.example.chathub.model.Chat;
 import com.example.chathub.model.Message;
 import com.example.chathub.model.MessageSent;
 import com.example.chathub.model.MessageType;
+import com.example.chathub.service.AuthService;
 import com.example.chathub.service.ChatService;
-import com.example.chathub.service.UserService;
+import com.example.chathub.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -26,7 +27,10 @@ public class ChatController {
     private ChatService chatService;
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
+
+    @Autowired
+    private JwtService jwtService;
 
     private final SimpMessageSendingOperations mesTemplate;
 

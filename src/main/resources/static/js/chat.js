@@ -6,7 +6,7 @@ let currentChat = null
 let stompClient = null
 
 function connect() {
-    const socket = new SockJS('/chat-socket');
+    const socket = new SockJS('/chat-socket', ['protocol1', 'protocol2']);
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, onConnect, onError);
@@ -92,7 +92,7 @@ function sendMessage() {
             message: mes,
             chat: chat
         }
-
+        // "token": sessionStorage.getItem("token")
         stompClient.send("/app/mes.send", {}, JSON.stringify(chatMes))
         chatInput.value = ''
     }

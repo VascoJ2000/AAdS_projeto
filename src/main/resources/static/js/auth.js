@@ -16,6 +16,7 @@ function login(email) {
 }
 
 function logoff() {
+    sessionStorage.clear()
     location.reload();
 }
 
@@ -32,13 +33,14 @@ async function postLogin(){
             email: email,
             password: password
         }),
-    }).then(res => {
-        console.log(res)
-        if(res.ok) {
-            login(email)
-            showSection('chat')
-            connect()
-        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        sessionStorage.setItem("token", data.token)
+        login(email)
+        showSection('chat')
+        connect()
     }).catch(err => console.log(err))
 }
 
@@ -54,9 +56,13 @@ async function postSignup(){
             email: email,
             password: password
         }),
-    }).then(res => {
-        console.log(res)
-        if(res.ok) location.reload();
+    }).then(res => res.json())
+    .then(data => {
+        console.log(data)
+        sessionStorage.setItem("token", data.token)
+        login(email)
+        showSection('chat')
+        connect()
     }).catch(err => console.log(err))
 
 

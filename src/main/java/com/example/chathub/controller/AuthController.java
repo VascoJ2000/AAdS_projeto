@@ -44,11 +44,9 @@ public class AuthController {
         UserDetails user = authService.loadUserByUsername(authRequest.getEmail());
         if (user != null) {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-            System.out.println(authRequest.getEmail());
 
             if (authentication.isAuthenticated()) {
                 String token = jwtService.generateToken(user);
-                System.out.println(token);
                 ResponseCookie cookie = ResponseCookie.from("token", token)
                         .httpOnly(true)
                         .secure(false)
