@@ -22,7 +22,7 @@ function onConnect() {
     }
     */
     stompClient.send(
-        "/app/chat.addUser",
+        "/app/mes.addUser",
         {},
         JSON.stringify({})
     )
@@ -93,7 +93,7 @@ function sendMessage() {
             chat: chat
         }
 
-        stompClient.send("/api/chat/mes.send", {}, JSON.stringify(chatMes))
+        stompClient.send("/app/mes.send", {}, JSON.stringify(chatMes))
         chatInput.value = ''
     }
 }

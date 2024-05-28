@@ -2,3 +2,11 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/ChatHub
+
+application:
+  security:
+    jwt:
+      secret-key: 0f7fb847f2ed8e8d7f21726d34c034031034e14c0f7fb847f2ed8e8d7f21726d34c034031034e14c
+      expiration: 3600000
+    cookie:
+      expiration: 3600

@@ -9,6 +9,7 @@ import com.example.chathub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/chat")
 public class ChatController {
 
     @Autowired
@@ -34,12 +34,12 @@ public class ChatController {
         this.mesTemplate = mesTemplate;
     }
 
-    @GetMapping
+    @GetMapping("/api/chat")
     public Chat getChat(@RequestParam String id) {
         return chatService.findById(id);
     }
 
-    @PostMapping
+    @PostMapping("/api/chat")
     public String createChat(@RequestBody String user1, @RequestBody String user2) {
         List<String> users = new ArrayList<>();
         users.add(user1);
@@ -50,35 +50,29 @@ public class ChatController {
         return "Message successfully sent";
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/chat/all")
     public List<Chat> getChats(@RequestParam String user) {
         return chatService.findByUser(user);
     }
 
     @MessageMapping("/mes.send")
-    public void handleMessage(@Payload MessageSent messageSent) {
-        Chat chatHistory = chatService.findById(messageSent.getChatId());
-        List<String> users = chatHistory.getUsers();
+    @SendTo("/topic/public")
+    public Message handleMessage(@Payload MessageSent messageSent) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
-        String user_id = userService.findByEmail(user).getId();
-        if (users.isEmpty() || users.contains(user)) {
-            Message mes = new Message(messageSent.getMessage(), user_id, MessageType.USER);
-            mesTemplate.convertAndSend("/topic/" + messageSent.getChatId(), mes);
-        }
+        Message mes = new Message(messageSent.getMessage(), user, MessageType.USER);
+        System.out.println(user);
+        System.out.println(mes.getMessage());
+        return mes;
     }
 
-    @MessageMapping("/user.add")
-    public void joinSession() {
+    @MessageMapping("/mes.addUser")
+    @SendTo("/topic/public")
+    public Message joinSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
-        String user_id = userService.findByEmail(user).getId();
-        List<Chat> userChats = chatService.findByUser(user);
-        Message mes = new Message(user + " joined session", user_id, MessageType.JOIN);
-        if (!userChats.isEmpty()) {
-            for (Chat chat : userChats) {
-                mesTemplate.convertAndSend("/topic/" + chat.getId(), mes);
-            }
-        }
+        System.out.println(user);
+        Message mes = new Message(user + " joined session", user, MessageType.JOIN);
+        return mes;
     }
 }

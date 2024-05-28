@@ -23,7 +23,7 @@ function logoff() {
 async function postLogin(){
     const email = document.getElementById('usernameLogin').value;
     const password = document.getElementById('senhaLogin').value;
-    await fetch(url + `/api/auth/login`, {
+    await fetch(url + `/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ async function postLogin(){
 async function postSignup(){
     const email = document.getElementById('usernameSignup').value;
     const password = document.getElementById('senhaSignup').value;
-    await fetch('/api/auth/signup', {
+    await fetch('/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -62,9 +62,9 @@ async function postSignup(){
 
 }
 
-async function delLogout(){
-    await fetch(url + '/api/auth/logout', {
-        method: 'DELETE',
+async function postLogout(){
+    await fetch(url + '/auth/logout', {
+        method: 'POST',
     }).catch(err => console.log(err))
 
     logoff();
