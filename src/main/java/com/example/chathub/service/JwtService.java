@@ -25,7 +25,7 @@ public class JwtService {
     private long EXPIRATION;
 
     public boolean validateToken(String token) {
-        return getExpiration(token).before(new Date());
+        return getExpiration(token).after(new Date());
     }
 
     public String generateToken(Map<String, Object> claims, UserDetails userDetails) {

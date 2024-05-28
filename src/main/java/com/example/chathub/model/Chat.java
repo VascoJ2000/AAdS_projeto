@@ -22,7 +22,8 @@ public class Chat {
     private Instant creationDate;
     private Instant modifiedDate;
 
-    public Chat(List<Message> messages, List<String> users) {
+    public Chat(String name, List<Message> messages, List<String> users) {
+        this.name = name;
         this.messages = messages;
         this.users = users;
         this.creationDate = Instant.now();

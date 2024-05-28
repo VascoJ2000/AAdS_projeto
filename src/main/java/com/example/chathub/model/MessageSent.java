@@ -2,11 +2,13 @@ package com.example.chathub.model;
 
 public class MessageSent {
     private String message;
-    private String chatId;
+    private String chat;
+    private String token;
 
-    public MessageSent(String message, String chatId) {
+    public MessageSent(String message, String chat, String token) {
         this.message = message;
-        this.chatId = chatId;
+        this.chat = chat;
+        this.token = token;
     }
 
     public String getMessage() {
@@ -17,11 +19,19 @@ public class MessageSent {
         this.message = message;
     }
 
-    public String getChatId() {
-        return chatId;
+    public String getChat() {
+        return chat;
     }
 
-    public void setChatId(String chatId) {
-        this.chatId = chatId;
+    public void setChat(String chatId) {
+        this.chat = chatId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

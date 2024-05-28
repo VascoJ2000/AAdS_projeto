@@ -6,7 +6,7 @@ let currentChat = null
 let stompClient = null
 
 function connect() {
-    const socket = new SockJS('/chat-socket', ['protocol1', 'protocol2']);
+    const socket = new SockJS('/chat-socket');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, onConnect, onError);
@@ -21,10 +21,17 @@ function onConnect() {
         stompClient.subscribe(`/topic/${chat.id}`, mesReceived);
     }
     */
+    const token = sessionStorage.getItem("token")
+    const chatMes = {
+        message: null,
+        chatId: currentChat,
+        token: token
+    }
+
     stompClient.send(
         "/app/mes.addUser",
         {},
-        JSON.stringify({})
+        JSON.stringify(chatMes)
     )
     loading.style.display = 'none'
     currentChat = 'public'
@@ -86,11 +93,13 @@ function sendMessage() {
     if (currentChat === null) return alert('No Chat is currently selected!')
     const chat = currentChat
     const mes = chatInput.value.trim()
+    const token = sessionStorage.getItem("token")
 
-    if(chat && mes){
+    if(mes){
         const chatMes = {
             message: mes,
-            chat: chat
+            chatId: chat,
+            token: token
         }
         // "token": sessionStorage.getItem("token")
         stompClient.send("/app/mes.send", {}, JSON.stringify(chatMes))
@@ -151,23 +160,20 @@ function addChatToList(chat){
 
 function mesReceived(payload){
     const mes = JSON.parse(payload.body)
+    console.log(mes.user_id)
+    console.log(mes.message)
     addToChat(mes)
 }
 
 function addToChat(mes){
-    const div = document.createElement('div');
-    div.classList.add('message')
-
-    const subDiv = document.createElement('div');
-    subDiv.innerHTML = mes.message;
-
     if (mes.type == 'USER'){
-        div.classList.add('incoming')
-        div.innerHTML = `<div><b>${mes.user_id}</b></div>`
+        chatHistory.innerHTML += `<div class="message incoming">
+                                    <div><b>${mes.user_id}</b></div>
+                                    <div>${mes.message}</div>
+                                  </div>`
     }else{
-        div.classList.add('server')
+        chatHistory.innerHTML += `<div class="message server">
+                                    <div>${mes.message}</div>
+                                  </div>`
     }
-
-    div.innerHTML += subDiv
-    chatHistory.innerHTML += div;
 }

@@ -1,9 +1,6 @@
 package com.example.chathub.controller;
 
-import com.example.chathub.model.Chat;
-import com.example.chathub.model.Message;
-import com.example.chathub.model.MessageSent;
-import com.example.chathub.model.MessageType;
+import com.example.chathub.model.*;
 import com.example.chathub.service.AuthService;
 import com.example.chathub.service.ChatService;
 import com.example.chathub.service.JwtService;
@@ -12,8 +9,10 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +48,7 @@ public class ChatController {
         users.add(user1);
         users.add(user2);
         List<Message> messages = new ArrayList<>();
-        Chat newChat = new Chat(messages, users);
+        Chat newChat = new Chat("",messages, users);
         chatService.save(newChat);
         return "Message successfully sent";
     }
@@ -62,21 +61,24 @@ public class ChatController {
     @MessageMapping("/mes.send")
     @SendTo("/topic/public")
     public Message handleMessage(@Payload MessageSent messageSent) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String user = authentication.getName();
-        Message mes = new Message(messageSent.getMessage(), user, MessageType.USER);
-        System.out.println(user);
-        System.out.println(mes.getMessage());
-        return mes;
+        if(jwtService.validateToken(messageSent.getToken())) {
+            String user = jwtService.getUser(messageSent.getToken());
+            Message mes = new Message(messageSent.getMessage(), user, MessageType.USER);
+            chatService.saveMessage(mes, user, messageSent.getChat());
+            return mes;
+        }
+        return null;
     }
 
     @MessageMapping("/mes.addUser")
     @SendTo("/topic/public")
-    public Message joinSession() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String user = authentication.getName();
-        System.out.println(user);
-        Message mes = new Message(user + " joined session", user, MessageType.JOIN);
-        return mes;
+    public Message joinSession(@Payload MessageSent messageSent) {
+        if(jwtService.validateToken(messageSent.getToken())) {
+            String user = jwtService.getUser(messageSent.getToken());
+            Message mes = new Message(user + " joined session", user, MessageType.JOIN);
+            chatService.saveMessage(mes, user, messageSent.getChat());
+            return mes;
+        }
+        return null;
     }
 }
