@@ -1,7 +1,6 @@
 package com.example.chathub.controller;
 
 import com.example.chathub.model.*;
-import com.example.chathub.service.AuthService;
 import com.example.chathub.service.ChatService;
 import com.example.chathub.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +19,6 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
-
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private JwtService jwtService;

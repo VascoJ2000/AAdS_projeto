@@ -1,4 +1,4 @@
-const url = 'http://localhost:8080'
+const url = window.location.origin;
 
 const modalLogin = document.getElementById("modalLogin");
 const bsModalLogin = new bootstrap.Modal(modalLogin, (backdrop = "static")); // Pode passar opções
