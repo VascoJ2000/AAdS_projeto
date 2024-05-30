@@ -1,10 +1,12 @@
 package com.example.chathub.service;
 
 import com.example.chathub.model.Chat;
+import com.example.chathub.model.Message;
 import com.example.chathub.repository.ChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +15,22 @@ public class ChatService {
 
     @Autowired
     private ChatRepository chatRepository;
+
+    public void saveMessage(Message mes, String chatName) {
+        if(chatName == null){
+            chatName = "Public";
+        }
+        Chat chat = chatRepository.findByName(chatName).orElse(null);
+        if(chat == null){
+            chat = new Chat("Public", new ArrayList<Message>());
+        }
+        chat.getMessages().add(mes);
+        chatRepository.save(chat);
+    }
+
+    public Chat getPublicChat(){
+        return chatRepository.findByName("Public").orElse(null);
+    }
 
     public void save(Chat chat) {
         chatRepository.save(chat);

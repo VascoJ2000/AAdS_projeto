@@ -2,6 +2,7 @@ function login(email) {
     const notLogged = document.getElementsByClassName('loggedOut');
     const logged = document.getElementsByClassName('loggedIn');
     const navEmail = document.getElementById('userLogged');
+    const sideNavEmail =document.getElementById('user-side')
 
     for(let i = 0; i<notLogged.length; i++){
         notLogged[i].style.display = "none";
@@ -11,9 +12,14 @@ function login(email) {
         logged[i].style.display = "block";
     }
     navEmail.innerHTML = email
+    sideNavEmail.innerHTML = email
+    showSection('chat')
+    getChat()
+    connect()
 }
 
 function logoff() {
+    sessionStorage.clear()
     location.reload();
 }
 
@@ -21,7 +27,7 @@ function logoff() {
 async function postLogin(){
     const email = document.getElementById('usernameLogin').value;
     const password = document.getElementById('senhaLogin').value;
-    await fetch(url + `/api/auth/login`, {
+    await fetch(url + `/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -30,16 +36,19 @@ async function postLogin(){
             email: email,
             password: password
         }),
-    }).then(res => {
-        console.log(res)
-        if(res.ok) login(email)
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data)
+        sessionStorage.setItem("token", data.token)
+        login(email)
     }).catch(err => console.log(err))
 }
 
 async function postSignup(){
     const email = document.getElementById('usernameSignup').value;
     const password = document.getElementById('senhaSignup').value;
-    await fetch('/api/auth/signup', {
+    await fetch('/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -48,17 +57,19 @@ async function postSignup(){
             email: email,
             password: password
         }),
-    }).then(res => {
-        console.log(res)
-        if(res.ok) location.reload();
+    }).then(res => res.json())
+    .then(data => {
+        console.log(data)
+        sessionStorage.setItem("token", data.token)
+        login(email)
     }).catch(err => console.log(err))
 
 
 }
 
-async function delLogout(){
-    await fetch(url + '/api/auth/logout', {
-        method: 'DELETE',
+async function postLogout(){
+    await fetch(url + '/auth/logout', {
+        method: 'POST',
     }).catch(err => console.log(err))
 
     logoff();

@@ -6,11 +6,13 @@ public class Message {
     private String message;
     private Instant date;
     private String user_id;
+    private MessageType type;
 
-    public Message(String message, String user_id) {
+    public Message(String message, String user_id, MessageType type) {
         this.message = message;
         this.date = Instant.now();
         this.user_id = user_id;
+        this.type = type;
     }
 
     public String getMessage() {
@@ -25,6 +27,10 @@ public class Message {
         return user_id;
     }
 
+    public MessageType getType() {
+        return type;
+    }
+
     public void setMessage(String message) {
         this.message = message;
     }
@@ -35,6 +41,10 @@ public class Message {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public void setType(MessageType type) {
+        this.type = type;
     }
 
     @Override
