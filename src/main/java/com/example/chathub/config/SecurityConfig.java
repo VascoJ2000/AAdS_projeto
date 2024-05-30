@@ -33,14 +33,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/favicon.ico", "/css/**", "/js/**", "/auth/**").permitAll()
-                        .requestMatchers("/api/chat", "/app/**", "/chat-socket", "/chat-socket/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout((logout) -> logout
                         .logoutUrl("/auth/logout")
-                        .logoutSuccessUrl("/auth/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("token")
                 );
