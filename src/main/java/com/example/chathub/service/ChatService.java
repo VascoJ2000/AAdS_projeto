@@ -29,7 +29,7 @@ public class ChatService {
     }
 
     public Chat getPublicChat(){
-        return chatRepository.findByName("Public").orElseThrow(()->new RuntimeException("Chat Not Found"));
+        return chatRepository.findByName("Public").orElse(null);
     }
 
     public void save(Chat chat) {

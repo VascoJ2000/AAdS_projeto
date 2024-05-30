@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
@@ -39,11 +40,12 @@ public class MesController {
 
     @MessageMapping("/mes.addUser")
     @SendTo("/topic/public")
-    public Message joinSession(@Payload MessageSent messageSent) {
+    public Message joinSession(@Payload MessageSent messageSent, SimpMessageHeaderAccessor headerAccessor) {
         if(jwtService.validateToken(messageSent.getToken())) {
             String user = jwtService.getUser(messageSent.getToken());
-            Message mes = new Message(user + " joined session", user, MessageType.JOIN);
+            Message mes = new Message(user + " joined session", user, MessageType.CONNECT);
             chatService.saveMessage(mes, null);
+            headerAccessor.getSessionAttributes().put("token", messageSent.getToken());
             return mes;
         }
         return null;
