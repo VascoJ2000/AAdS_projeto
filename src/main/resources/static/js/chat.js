@@ -104,4 +104,5 @@ function addToChat(mes){
                                     <div>${mes.message}</div>
                                   </div>`
     }
+    chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
 }
