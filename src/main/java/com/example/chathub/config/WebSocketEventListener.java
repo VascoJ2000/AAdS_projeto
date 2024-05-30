@@ -2,6 +2,7 @@ package com.example.chathub.config;
 
 import com.example.chathub.model.Message;
 import com.example.chathub.model.MessageType;
+import com.example.chathub.service.ChatService;
 import com.example.chathub.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,9 @@ public class WebSocketEventListener {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private ChatService chatService;
+
     @EventListener
     public void handleWebSocketDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
@@ -29,8 +33,10 @@ public class WebSocketEventListener {
         if (token != null) {
             if(jwtService.validateToken(token)) {
                 String user = jwtService.getUser(token);
+                log.info("user disconnected: {}", user);
                 Message mes = new Message(user + " left session", user, MessageType.DISCONNECT);
                 messagingTemplate.convertAndSend("/topic/public", mes);
+                chatService.saveMessage(mes, null);
             }
         }
     }
