@@ -14,17 +14,9 @@ function connect() {
 
 function onConnect() {
     stompClient.subscribe('/topic/public', mesReceived);
-    /*
-    const chats = getChatList()
 
-    for (let chat in chats) {
-        stompClient.subscribe(`/topic/${chat.id}`, mesReceived);
-    }
-    */
     const token = sessionStorage.getItem("token")
     const chatMes = {
-        message: null,
-        chatId: currentChat,
         token: token
     }
 
@@ -59,13 +51,11 @@ function sendMessage() {
     if (currentChat === null) return alert('No Chat is currently selected!')
     const chat = currentChat
     const mes = chatInput.value.trim()
-    const token = sessionStorage.getItem("token")
 
     if(mes){
         const chatMes = {
             message: mes,
-            chatId: chat,
-            token: token
+            chatId: chat
         }
         // "token": sessionStorage.getItem("token")
         stompClient.send("/app/mes.send", {}, JSON.stringify(chatMes))

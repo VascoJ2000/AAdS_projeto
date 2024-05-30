@@ -1,7 +1,7 @@
 package com.example.chathub.controller;
 
 import com.example.chathub.model.AuthRequest;
-import com.example.chathub.model.JwtResponse;
+import com.example.chathub.model.JwtMessage;
 import com.example.chathub.model.User;
 import com.example.chathub.model.UserRole;
 import com.example.chathub.service.AuthService;
@@ -40,7 +40,7 @@ public class AuthController {
     private int COOKIE_EXPIRATION;
 
     @PostMapping("/login")
-    public JwtResponse login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+    public JwtMessage login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
         UserDetails user = authService.loadUserByUsername(authRequest.getEmail());
         if (user != null) {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
@@ -55,7 +55,7 @@ public class AuthController {
                         .build();
 
                 response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-                return JwtResponse.builder()
+                return JwtMessage.builder()
                         .token(token)
                         .build();
             }

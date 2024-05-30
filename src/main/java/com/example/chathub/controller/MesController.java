@@ -28,24 +28,27 @@ public class MesController {
 
     @MessageMapping("/mes.send")
     @SendTo("/topic/public")
-    public Message handleMessage(@Payload MessageSent messageSent) {
-        if(jwtService.validateToken(messageSent.getToken())) {
-            String user = jwtService.getUser(messageSent.getToken());
-            Message mes = new Message(messageSent.getMessage(), user, MessageType.USER);
-            chatService.saveMessage(mes, null);
-            return mes;
+    public Message handleMessage(@Payload MessageSent messageSent, SimpMessageHeaderAccessor headerAccessor) {
+        String token = (String) headerAccessor.getSessionAttributes().get("token");
+        if (token != null) {
+            if (jwtService.validateToken(token)) {
+                String user = jwtService.getUser(token);
+                Message mes = new Message(messageSent.getMessage(), user, MessageType.USER);
+                chatService.saveMessage(mes, null);
+                return mes;
+            }
         }
         return null;
     }
 
     @MessageMapping("/mes.addUser")
     @SendTo("/topic/public")
-    public Message joinSession(@Payload MessageSent messageSent, SimpMessageHeaderAccessor headerAccessor) {
-        if(jwtService.validateToken(messageSent.getToken())) {
-            String user = jwtService.getUser(messageSent.getToken());
+    public Message joinSession(@Payload JwtMessage jwtMessage, SimpMessageHeaderAccessor headerAccessor) {
+        if(jwtService.validateToken(jwtMessage.getToken())) {
+            String user = jwtService.getUser(jwtMessage.getToken());
             Message mes = new Message(user + " joined session", user, MessageType.CONNECT);
             chatService.saveMessage(mes, null);
-            headerAccessor.getSessionAttributes().put("token", messageSent.getToken());
+            headerAccessor.getSessionAttributes().put("token", jwtMessage.getToken());
             return mes;
         }
         return null;
