@@ -13,6 +13,9 @@ function login(email) {
     }
     navEmail.innerHTML = email
     sideNavEmail.innerHTML = email
+    showSection('chat')
+    getChat()
+    connect()
 }
 
 function logoff() {
@@ -39,8 +42,6 @@ async function postLogin(){
         console.log(data)
         sessionStorage.setItem("token", data.token)
         login(email)
-        showSection('chat')
-        connect()
     }).catch(err => console.log(err))
 }
 
@@ -61,8 +62,6 @@ async function postSignup(){
         console.log(data)
         sessionStorage.setItem("token", data.token)
         login(email)
-        showSection('chat')
-        connect()
     }).catch(err => console.log(err))
 
 

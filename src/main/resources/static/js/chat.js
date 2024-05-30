@@ -43,50 +43,16 @@ function onError() {
     loading.style.color = 'red'
 }
 
-function getChatList() {
-    let chats = null
-    fetch(url + `/api/chat`, {
+function getChat() {
+    fetch(url + "/api/chat", {
         method: 'GET',
     })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            chats = data
-        })
-        .catch(err => console.log(err))
-
-    return chats
-}
-
-async function getChat(chat) {
-    await fetch(url + `/api/chat/${chat}`, {
-        method: 'GET',
+    .then(res => res.json())
+    .then(data => {
+        loadChat(data)
+        console.log(data)
     })
-        .then(res => res.json())
-        .then(data => {
-            loadChat(data)
-            console.log(data)
-        })
-        .catch(err => console.log(err))
-}
-
-async function addChat() {
-    const newChat = null
-    await fetch(url + `/api/chat`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            newChat
-        }),
-    })
-        .then(res => res.json())
-        .then(data => {
-            loadChat(data)
-            console.log(data)
-        })
-        .catch(err => console.log(err))
+    .catch(err => console.log(err))
 }
 
 function sendMessage() {
@@ -107,72 +73,34 @@ function sendMessage() {
     }
 }
 
-async function addUser() {
-    const email = null
-    await fetch(url + `/api/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email
-        }),
-    })
-        .then(res => res.json())
-        .then(data => {
-            loadChat(data)
-            console.log(data)
-        })
-        .catch(err => console.log(err))
-}
-
-function loadChat(chatRoom){
-    activateChat(chatRoom)
-
-}
-
-function activateChat(chatRoom) {
-    loading.textContent = "Loading chat..."
-    loading.style.display = "block"
-
-    const rooms = document.getElementsByTagName('chat-room')
-
-    for(let i = 0; i<rooms.length; i++){
-        rooms[i].classList.add('text-white')
-        rooms[i].classList.remove('active')
+function loadChat(chat){
+    const mes = chat.messages
+    for (let i = 0; i<mes.length; i++) {
+        console.log(mes[i])
+        addToChat(mes[i])
     }
-
-    document.getElementById(chatRoom).classList.remove('text-white')
-    document.getElementById(chatRoom).classList.add('active')
-    currentChat = chatRoom
-}
-
-function addChatToList(chat){
-    const li = document.createElement('li')
-    li.classList.add('nav-item');
-    li.innerHTML = `<a href="#" id="${chat.id}" class="nav-link text-white chat-room" aria-current="page" onclick="loadChat('${chat.id}')">
-                        <svg class="bi me-2" width="16" height="16"></svg>
-                        chat.name
-                    </a>`
-
-    document.getElementById('chat-list').innerHTML += li
 }
 
 function mesReceived(payload){
     const mes = JSON.parse(payload.body)
-    console.log(mes.user_id)
-    console.log(mes.message)
     addToChat(mes)
 }
 
 function addToChat(mes){
     if (mes.type == 'USER'){
-        chatHistory.innerHTML += `<div class="message incoming">
-                                    <div><b>${mes.user_id}</b></div>
-                                    <div>${mes.message}</div>
-                                  </div>`
+        if(mes.user_id == document.getElementById('userLogged').innerText){
+            chatHistory.innerHTML += `<div class="message outgoing">
+                                        <div><b>${mes.user_id}</b></div>
+                                        <div>${mes.message}</div>
+                                      </div>`
+        }else{
+            chatHistory.innerHTML += `<div class="message incoming">
+                                        <div><b>${mes.user_id}</b></div>
+                                        <div>${mes.message}</div>
+                                      </div>`
+        }
     }else{
-        chatHistory.innerHTML += `<div class="message server">
+        chatHistory.innerHTML += `<div class="message server mx-auto">
                                     <div>${mes.message}</div>
                                   </div>`
     }

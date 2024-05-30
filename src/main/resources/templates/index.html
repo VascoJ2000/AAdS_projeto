@@ -98,7 +98,7 @@
                     <hr>
                     <ul id="chat-list"  class="nav nav-pills flex-column mb-auto">
                         <li class="nav-item">
-                            <a href="#" id="public-chat" class="nav-link active chat-room" aria-current="page" onclick="loadChat('public-chat')">
+                            <a href="#" id="public-chat" class="nav-link active chat-room" aria-current="page">
                                 <svg class="bi me-2" width="16" height="16"></svg>
                                 Public
                             </a>
@@ -123,7 +123,7 @@
                         <div id="loading">
                             Loading chat...
                         </div>
-                        <div id="chat-history" class="chat-history"></div>
+                        <div id="chat-history" class="overflow-y-auto chat-history"></div>
                         <div class="container-fluid text-center p-4 mt-auto d-inline-flex chat-controls">
                             <input type="text" class="form-control" placeholder="Type your message here..." id="message" name="message">
                             <button type="button" class="btn btn-primary" onclick="sendMessage()">Send</button>
