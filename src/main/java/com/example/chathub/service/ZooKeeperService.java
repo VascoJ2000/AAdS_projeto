@@ -36,28 +36,6 @@ public class ZooKeeperService {
         }
     }
 
-    public String selectBestServer() throws KeeperException, InterruptedException {
-        List<String> servers = zooKeeper.getChildren("/servers", false);
-        String bestServer = null;
-        int minLoad = Integer.MAX_VALUE;
-        String bestServerIp = null;
-
-        for (String server : servers) {
-            byte[] serverData = zooKeeper.getData("/servers/" + server, false, null);
-            String[] dataParts = new String(serverData).split(":");
-            String ip = dataParts[0];
-            int load = Integer.parseInt(dataParts[1]);
-
-            if (load < minLoad) {
-                minLoad = load;
-                bestServer = server;
-                bestServerIp = ip;
-            }
-        }
-
-        return bestServerIp;
-    }
-
     public void updateServerLoad(String path, String ip, int load) throws KeeperException, InterruptedException {
         String data = ip + ":" + load;
         Stat stat = zooKeeper.exists(path, false);
