@@ -6,6 +6,7 @@ import org.chathub.server.model.MessageType;
 import org.chathub.server.model.User;
 import org.chathub.server.service.ChatService;
 import org.chathub.server.service.UserService;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -23,8 +24,8 @@ public class MesController {
 
     @MessageMapping("/mes.send")
     @SendTo("/topic/public")
-    public Message handleMessage(@Payload MessageSent messageSent) {
-        String name = messageSent.getSender();
+    public Message handleMessage(@Payload MessageSent messageSent, SimpMessageHeaderAccessor headerAccessor) {
+        String name = (String) headerAccessor.getSessionAttributes().get("token");
         if (name != null) {
             if (userService.findByEmail(name) != null) {
                 Message mes = new Message(messageSent.getMessage(), name, MessageType.USER);
@@ -37,12 +38,11 @@ public class MesController {
 
     @MessageMapping("/mes.addUser")
     @SendTo("/topic/public")
-    public Message joinSession(@Payload String username) {
+    public Message joinSession(@Payload String username, SimpMessageHeaderAccessor headerAccessor) {
         User user = userService.findByEmail(username);
         if(user != null) {
-            Message mes = new Message(username + " joined session", username, MessageType.CONNECT);
-            chatService.saveMessage(mes, null);
-            return mes;
+            headerAccessor.getSessionAttributes().put("token", username);
+            return new Message(username + " joined session", username, MessageType.CONNECT);
         }
         return null;
     }

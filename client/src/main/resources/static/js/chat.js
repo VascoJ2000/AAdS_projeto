@@ -50,8 +50,7 @@ function sendMessage() {
     if(mes){
         const chatMes = {
             message: mes,
-            chatId: chat,
-            sender: activeUser
+            chatId: chat
         }
         stompClient.send("/app/mes.send", {}, JSON.stringify(chatMes))
         chatInput.value = ''

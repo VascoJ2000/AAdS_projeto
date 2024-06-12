@@ -21,21 +21,17 @@ public class WebSocketEventListener {
     private final SimpMessageSendingOperations messagingTemplate;
 
     @Autowired
-    private ChatService chatService;
-
-    @Autowired
     private UserService userService;
 
     @EventListener
     public void handleWebSocketDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String name = (String) headerAccessor.getSessionAttributes().get("name");
+        String name = (String) headerAccessor.getSessionAttributes().get("token");
         if (name != null) {
             if(userService.findByEmail(name) != null) {
                 log.info("user disconnected: {}", name);
                 Message mes = new Message(name + " left session", name, MessageType.DISCONNECT);
                 messagingTemplate.convertAndSend("/topic/public", mes);
-                chatService.saveMessage(mes, null);
             }
         }
     }
