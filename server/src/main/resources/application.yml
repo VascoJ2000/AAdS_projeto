@@ -1,5 +1,45 @@
 spring:
+  profiles:
+    active: instance0
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: instance0
   data:
     mongodb:
       uri: mongodb://localhost:27017/ChatHub
+  application:
+    name: server-0
+server:
+  port: 8000
 
+---
+
+spring:
+  config:
+    activate:
+      on-profile: instance1
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/ChatHub
+  application:
+    name: server-1
+server:
+  port: 8081
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: instance2
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/ChatHub
+  application:
+    name: server-2
+server:
+  port: 8082

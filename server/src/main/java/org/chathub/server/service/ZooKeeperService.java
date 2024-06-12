@@ -4,6 +4,7 @@ import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 public class ZooKeeperService {
@@ -48,17 +49,25 @@ public class ZooKeeperService {
         zooKeeper.getChildren("/servers", event -> {
             if (event.getType() == Watcher.Event.EventType.NodeChildrenChanged) {
                 try {
-                    List<String> servers = zooKeeper.getChildren("/servers", false);
+                    List<String> servers = zooKeeper.getChildren("/servers/leader", false);
                     if (servers.isEmpty()) {
-
-                    } else {
-
+                        electLeader();
                     }
                 } catch (KeeperException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    public void electLeader() throws KeeperException, InterruptedException {
+        List<String> children = zooKeeper.getChildren("/servers", false);
+
+        Collections.sort(children);
+        String smallestChild = children.get(0);
+        if(smallestChild.equals("leader")){
+
+        }
     }
 
     public ZooKeeper getZooKeeper() {
