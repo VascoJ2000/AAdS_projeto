@@ -1,5 +1,5 @@
-const url = window.location.origin;
-const Zookeeper = null;
+const clientUrl = window.location.origin;
+let url = null;
 
 const modalLogin = document.getElementById("modalLogin");
 const bsModalLogin = new bootstrap.Modal(modalLogin, (backdrop = "static")); // Pode passar opções
@@ -38,3 +38,14 @@ function showSection(section) {
 }
 
 window.onload = showSection('home');
+
+window.onload = function () {
+    fetch(clientUrl + `/api/server`, {
+        method: 'GET',
+    })
+    .then(res => res.text())
+    .then(data => {
+        console.log(data)
+        url = "http://" + data;
+    }).catch(err => console.log(err))
+}

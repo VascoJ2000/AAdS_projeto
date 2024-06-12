@@ -1,3 +1,5 @@
+let activeUser = null
+
 function login(email) {
     const notLogged = document.getElementsByClassName('loggedOut');
     const logged = document.getElementsByClassName('loggedIn');
@@ -13,6 +15,7 @@ function login(email) {
     }
     navEmail.innerHTML = email
     sideNavEmail.innerHTML = email
+    activeUser = email
     showSection('chat')
     getChat()
     connect()
@@ -20,6 +23,7 @@ function login(email) {
 
 function logoff() {
     sessionStorage.clear()
+    activeUser = null
     location.reload();
 }
 
@@ -36,19 +40,18 @@ async function postLogin(){
             email: email,
             password: password
         }),
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        sessionStorage.setItem("token", data.token)
-        login(email)
+    }).then(res => {
+        if(res.ok) {
+            console.log(res.text())
+            login(email)
+        }
     }).catch(err => console.log(err))
 }
 
 async function postSignup(){
     const email = document.getElementById('usernameSignup').value;
     const password = document.getElementById('senhaSignup').value;
-    await fetch('/auth/signup', {
+    await fetch(url + '/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -57,11 +60,11 @@ async function postSignup(){
             email: email,
             password: password
         }),
-    }).then(res => res.json())
-    .then(data => {
-        console.log(data)
-        sessionStorage.setItem("token", data.token)
-        login(email)
+    }).then(res => {
+        if(res.ok) {
+            console.log(res.text())
+            login(email)
+        }
     }).catch(err => console.log(err))
 
 

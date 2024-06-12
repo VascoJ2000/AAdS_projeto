@@ -6,7 +6,7 @@ let currentChat = null
 let stompClient = null
 
 function connect() {
-    const socket = new SockJS('/chat-socket');
+    const socket = new SockJS(url + '/chat-socket');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, onConnect, onError);
@@ -15,15 +15,10 @@ function connect() {
 function onConnect() {
     stompClient.subscribe('/topic/public', mesReceived);
 
-    const token = sessionStorage.getItem("token")
-    const chatMes = {
-        token: token
-    }
-
     stompClient.send(
         "/app/mes.addUser",
         {},
-        JSON.stringify(chatMes)
+        activeUser
     )
     loading.style.display = 'none'
     currentChat = 'public'
@@ -55,9 +50,9 @@ function sendMessage() {
     if(mes){
         const chatMes = {
             message: mes,
-            chatId: chat
+            chatId: chat,
+            sender: activeUser
         }
-        // "token": sessionStorage.getItem("token")
         stompClient.send("/app/mes.send", {}, JSON.stringify(chatMes))
         chatInput.value = ''
     }
