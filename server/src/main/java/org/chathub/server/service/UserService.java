@@ -2,6 +2,7 @@ package org.chathub.server.service;
 
 import org.chathub.server.model.User;
 import org.chathub.server.repository.UserRepository;
+import org.chathub.server.util.EncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EncryptionUtil encryption;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -29,7 +32,7 @@ public class UserService {
     }
 
     public User save(User user) {
-        user.setPassword(user.getPassword());
+        user.setPassword(encryption.encrypt(user.getPassword()));
         return userRepository.save(user);
     }
 
