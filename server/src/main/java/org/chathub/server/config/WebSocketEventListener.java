@@ -26,7 +26,6 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String name = (String) headerAccessor.getSessionAttributes().get("token");
-        System.out.println(name);
         if (name != null) {
             if(userService.findByEmail(name) != null) {
                 log.info("user disconnected: {}", name);

@@ -6,6 +6,7 @@ import org.chathub.server.model.MessageType;
 import org.chathub.server.model.User;
 import org.chathub.server.service.ChatService;
 import org.chathub.server.service.UserService;
+import org.chathub.server.service.ZooService;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -22,6 +23,9 @@ public class MesController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ZooService zooService;
+
     @MessageMapping("/mes.send")
     @SendTo("/topic/public")
     public Message handleMessage(@Payload MessageSent messageSent, SimpMessageHeaderAccessor headerAccessor) {
@@ -29,7 +33,9 @@ public class MesController {
         if (name != null) {
             if (userService.findByEmail(name) != null) {
                 Message mes = new Message(messageSent.getMessage(), name, MessageType.USER);
-                chatService.saveMessage(mes, null);
+                if(zooService.isLeader()) {
+                    chatService.saveMessage(mes, null);
+                }
                 return mes;
             }
         }
