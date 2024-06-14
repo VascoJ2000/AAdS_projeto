@@ -2,7 +2,6 @@ package org.chathub.server.config;
 
 import org.chathub.server.model.Message;
 import org.chathub.server.model.MessageType;
-import org.chathub.server.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.chathub.server.service.UserService;
@@ -27,6 +26,7 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String name = (String) headerAccessor.getSessionAttributes().get("token");
+        System.out.println(name);
         if (name != null) {
             if(userService.findByEmail(name) != null) {
                 log.info("user disconnected: {}", name);
