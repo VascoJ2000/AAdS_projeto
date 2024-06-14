@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: instance0
+  datasource:
+    key: QFYD8AKweX8kKfW4MYfBnguhpBdVDqgx
 
 ---
 
