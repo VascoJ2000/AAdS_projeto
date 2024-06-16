@@ -36,6 +36,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public boolean authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            return false;
+        }
+        if (!user.getPassword().equals(encryption.encrypt(password))) {
+            return false;
+        }
+        return true;
+    }
+
     public void deleteById(String id) {
         userRepository.deleteById(id);
     }

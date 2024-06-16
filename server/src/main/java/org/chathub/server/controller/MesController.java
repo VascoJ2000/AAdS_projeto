@@ -38,6 +38,7 @@ public class MesController {
         if(user != null) {
             headerAccessor.getSessionAttributes().put("token", username);
             Message mes = new Message(username + " joined session", username, MessageType.CONNECT);
+            zooService.updateLoad(true);
             zooService.sendMessage(mes);
         }
     }
