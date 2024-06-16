@@ -22,10 +22,10 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         User user = userService.findByEmail(authRequest.getEmail());
         if (user != null) {
-            if (user.getPassword().equals(authRequest.getPassword())) {
+            if (userService.authenticate(authRequest.getEmail(), authRequest.getPassword())) {
                 return ResponseEntity.ok("User logged in successfully");
             }
-            return ResponseEntity.ok("Password does not match!");
+            return ResponseEntity.badRequest().body("Password does not match!");
         }
         return ResponseEntity.badRequest().body("User not found!");
     }

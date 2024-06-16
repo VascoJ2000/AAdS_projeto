@@ -31,6 +31,7 @@ public class WebSocketEventListener {
             if(userService.findByEmail(name) != null) {
                 log.info("user disconnected: {}", name);
                 Message mes = new Message(name + " left session", name, MessageType.DISCONNECT);
+                zooService.updateLoad(false);
                 zooService.sendMessage(mes);
             }
         }

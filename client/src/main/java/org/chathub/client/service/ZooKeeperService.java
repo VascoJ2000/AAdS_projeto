@@ -47,23 +47,6 @@ public class ZooKeeperService {
         return bestServerIp;
     }
 
-    public void watchServers() throws KeeperException, InterruptedException {
-        zooKeeper.getChildren("/servers", event -> {
-            if (event.getType() == Watcher.Event.EventType.NodeChildrenChanged) {
-                try {
-                    List<String> servers = zooKeeper.getChildren("/servers", false);
-                    if (servers.isEmpty()) {
-
-                    } else {
-
-                    }
-                } catch (KeeperException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     public ZooKeeper getZooKeeper() {
         return zooKeeper;
     }

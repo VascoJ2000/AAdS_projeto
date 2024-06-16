@@ -80,10 +80,9 @@ public class ZooService {
         }
     }
 
-    public void updateLoad(int load) {
+    public void updateLoad(boolean increase) {
         try {
-            currentLoad.set(load);
-            serverData = serverAddress + ":" + serverPort + ":" + load;
+            serverData = serverAddress + ":" + serverPort + ":" + currentLoad.addAndGet(increase ? 1 : -1);
             client.setData().forPath(serverPath, serverData.getBytes());
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,8 +109,7 @@ public class ZooService {
                 // Turn bytes back into message
                 String[] dataParts = new String(data).split("/:/");
                 Message message = new Message(dataParts[0], dataParts[1], MessageType.valueOf(dataParts[2]));
-                System.out.println(message);
-                System.out.println(isLeader());
+
                 if (isLeader() && message.getType() == MessageType.USER) {
                     chatService.saveMessage(message, null);
                 }
